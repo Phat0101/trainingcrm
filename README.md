@@ -1,3 +1,31 @@
+# Training Certificate Management System
+
+## Project Description
+
+This project is a Training Certificate Management System developed for Tan Phu District Hospital in Ho Chi Minh City. It helps hospital administrators efficiently manage employees' continuous medical education and training records.
+
+### Key Features:
+- Employee information management
+- Training record tracking with detailed information
+- Date-based filtering of training records
+- Certificate generation with customizable date ranges
+- Export to Word documents
+- Print-friendly certificate templates
+
+## Mô tả dự án
+
+Đây là Hệ thống Quản lý Chứng nhận Đào tạo được phát triển cho Bệnh viện Quận Tân Phú tại Thành phố Hồ Chí Minh. Hệ thống giúp các quản trị viên bệnh viện quản lý hiệu quả hồ sơ đào tạo và cập nhật kiến thức y khoa liên tục của nhân viên.
+
+### Tính năng chính:
+- Quản lý thông tin nhân viên
+- Theo dõi hồ sơ đào tạo với thông tin chi tiết
+- Lọc hồ sơ đào tạo theo thời gian
+- Tạo giấy chứng nhận với phạm vi ngày tùy chỉnh
+- Xuất ra tài liệu Word
+- Mẫu giấy chứng nhận thân thiện với việc in ấn
+
+---
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
