@@ -424,7 +424,7 @@ export default function CertificationPage() {
           </table>
 
           <div className="my-4">
-            <p>Tổng số tiết đào tạo liên tục <span className="date-range-text">{getDateRangeText()}</span>: <b>{getTotalHours()}</b> (tổng) giờ tín chỉ</p>
+            <p>Tổng số tiết đào tạo liên tục <span className="date-range-text">{getDateRangeText()}</span>: <b>{getTotalHours()}</b> giờ tín chỉ</p>
           </div>
 
           <div className="text-right mt-8">

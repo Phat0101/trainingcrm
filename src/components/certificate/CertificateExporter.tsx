@@ -311,7 +311,7 @@ export const useCertificateExporter = () => {
             </tr>
           </table>
 
-          <p class="summary">Tổng số tiết đào tạo liên tục ${dateRangeText}: <b>${totalHours}</b> (tổng) giờ tín chỉ</p>
+          <p class="summary">Tổng số tiết đào tạo liên tục ${dateRangeText}: <b>${totalHours}</b> giờ tín chỉ</p>
 
           <div class="signature">
             <p style="font-style: italic; margin-bottom: 3pt;">TP. Hồ Chí Minh, ${formattedDate}</p>
