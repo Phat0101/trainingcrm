@@ -1,7 +1,9 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { FaUserAlt, FaGraduationCap, FaCertificate, FaListAlt } from 'react-icons/fa';
+import { FaUserAlt, FaGraduationCap, FaCertificate, FaListAlt, FaSignOutAlt, FaUser } from 'react-icons/fa';
 import { cn } from '@/lib/utils';
+import { useSession, signOut } from 'next-auth/react';
+import { Button } from './ui/button';
 
 const navItems = [
   {
@@ -28,6 +30,7 @@ const navItems = [
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const { data: session } = useSession();
 
   return (
     <div className="flex h-screen w-64 flex-col border-r bg-white">
@@ -54,6 +57,26 @@ export default function Sidebar() {
           ))}
         </ul>
       </nav>
+
+      {/* User info and logout button */}
+      <div className="border-t p-4">
+        <div className="flex flex-col gap-3">
+          <div className="flex items-center gap-2 mb-2">
+            <FaUser className="text-gray-600" />
+            <span className="text-sm font-medium">{session?.user?.name}</span>
+          </div>
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={() => signOut({ callbackUrl: '/auth/login' })}
+            className="w-full"
+          >
+            <FaSignOutAlt className="mr-2 h-4 w-4" />
+            Logout
+          </Button>
+        </div>
+      </div>
+      
       <div className="border-t p-4">
         <div className="flex items-center gap-3 rounded-md px-3 py-2">
           <div className="text-sm font-medium">Quản lý cập nhật kiến thức liên tục dựa trên web</div>
