@@ -358,17 +358,19 @@ export default function CertificationPage() {
         <div className="bg-white p-8 shadow-md rounded-md mb-6 print:shadow-none print:p-0" ref={certificateRef}>
           <div className="flex justify-between">
             <div className="text-center w-1/3">
-              <p className="font-bold">SỞ Y TẾ THÀNH PHỐ HỒ CHÍ MINH</p>
+              <p className="font-bold">SỞ Y TẾ TP. HỒ CHÍ MINH</p>
               <p className="font-bold">BỆNH VIỆN QUẬN TÂN PHÚ</p>
-              <p>Số:........./BVQTP - GCNĐTLT</p>
+              <div style={{ width: '100px', borderBottom: '1px solid black', margin: '5px auto' }} />
+              <p className='mt-4'>Số:........./BVQTP - GCNĐTLT</p>
             </div>
-            <div className="text-center w-1/3">
+            <div className="text-center w-3/5">
               <p className="font-bold">CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</p>
               <p className="font-bold">Độc lập - Tự Do - Hạnh Phúc</p>
+              <div style={{ width: '180px', borderBottom: '1px solid black', margin: '5px auto' }} />
             </div>
           </div>
 
-          <div className="text-center mt-8 mb-6">
+          <div className="text-center mt-8 mb-12">
             <h2 className="text-xl font-bold">GIẤY CHỨNG NHẬN</h2>
             <h3 className="text-lg font-bold">THAM GIA CẬP NHẬT KIẾN THỨC Y KHOA LIÊN TỤC</h3>
             <h3 className="text-lg font-bold">TRONG KHÁM BỆNH, CHỮA BỆNH</h3>
@@ -377,8 +379,8 @@ export default function CertificationPage() {
           <div className="mb-4">
             <p><span className="font-bold">Chứng nhận: </span>Ông/Bà: {selectedEmployee.fullName}</p>
             <p><span className="font-bold">Sinh ngày: </span>{selectedEmployee.birthDate}</p>
-            <p><span className="font-bold">Đơn vị công tác: </span>{selectedEmployee.department || '...'}</p>
-            <p><span className="font-bold">Đã hoàn thành cập nhật kiến thức y khoa liên tục với các nội dung sau:</span></p>
+            <p><span className="font-bold">Đơn vị công tác: </span>Bệnh viện quận Tân Phú</p>
+            <p><span className="font-bold">Đã hoàn thành cập nhật kiến thức y khoa liên tục với các nội dung như sau:</span></p>
           </div>
 
           <table className="w-full border-collapse border border-gray-400">
@@ -426,7 +428,7 @@ export default function CertificationPage() {
           </div>
 
           <div className="text-right mt-8">
-            <p>TP. Hồ Chí Minh, ngày {new Date(printDate).getDate()} tháng {new Date(printDate).getMonth() + 1} năm {new Date(printDate).getFullYear()}</p>
+            <p className='italic'>TP. Hồ Chí Minh, ngày {new Date(printDate).getDate()} tháng {new Date(printDate).getMonth() + 1} năm {new Date(printDate).getFullYear()}</p>
             <p className="font-bold mt-2 mr-[100px]">GIÁM ĐỐC</p>
             <div className="h-20"></div>
           </div>

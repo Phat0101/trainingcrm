@@ -26,6 +26,20 @@ export const useCertificatePrinter = (certificateRef: RefObject<HTMLDivElement |
             margin: 0;
             padding: 20px;
             font-size: 12pt;
+            line-height: 1.2; /* Reduce line height globally for the print version */
+          }
+          
+          /* Control spacing for paragraphs */
+          p {
+            margin-top: 0.3rem;
+            margin-bottom: 0.3rem;
+            line-height: 1.2;
+          }
+          
+          /* Reduce spacing in table cells */
+          td, th {
+            padding: 4px;
+            line-height: 1.2;
           }
           
           /* Header section styles */
@@ -50,12 +64,12 @@ export const useCertificatePrinter = (certificateRef: RefObject<HTMLDivElement |
           }
           
           /* Title section styles */
-          .mt-8 {
-            margin-top: 2rem;
+          .mt-4 {
+            margin-top: 1rem;
           }
           
-          .mb-6 {
-            margin-bottom: 1.5rem;
+          .mb-12 {
+            margin-bottom: 3rem;
           }
           
           .text-xl {
@@ -64,6 +78,19 @@ export const useCertificatePrinter = (certificateRef: RefObject<HTMLDivElement |
           
           .text-lg {
             font-size: 1.125rem;
+          }
+          
+          /* Certificate title specific styles */
+          .text-center.mt-8.mb-12 {
+            margin-top: 1.5rem;
+            margin-bottom: 3rem;
+          }
+          
+          .text-center.mt-8.mb-12 h2,
+          .text-center.mt-8.mb-12 h3 {
+            margin-top: 0.2rem;
+            margin-bottom: 0.2rem;
+            line-height: 1.2;
           }
           
           /* Table styles */
@@ -141,6 +168,13 @@ export const useCertificatePrinter = (certificateRef: RefObject<HTMLDivElement |
           /* Date range formatting */
           .date-range-text {
             font-weight: normal;
+            line-height: 1.2;
+          }
+          
+          /* Adjust spacing for director signature section */
+          .text-right p {
+            margin-top: 0.3rem;
+            margin-bottom: 0.3rem;
           }
           
           /* Remove unnecessary elements for print */
@@ -150,6 +184,10 @@ export const useCertificatePrinter = (certificateRef: RefObject<HTMLDivElement |
           
           .print\\:p-0 {
             padding: 0;
+          }
+
+          .italic {
+            font-style: italic;
           }
           
           /* Container */

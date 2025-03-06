@@ -6,8 +6,8 @@ import { Toaster } from "@/components/ui/toaster";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Training CRM",
-  description: "Employee Training Management System",
+  title: "Cập nhật kiến thức y khoa liên tục",
+  description: "Cập nhật kiến thức y khoa liên tục | Continuous Medical Knowledge Update",
 };
 
 export default function RootLayout({

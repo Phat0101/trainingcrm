@@ -73,9 +73,15 @@ export const useCertificateExporter = () => {
           body {
             font-family: 'Times New Roman', Times, serif;
             font-size: 12pt;
-            line-height: 1.3;
+            line-height: 1.2;
             margin: 0;
             padding: 0;
+          }
+          
+          p {
+            margin-top: 0.3rem;
+            margin-bottom: 0.3rem;
+            line-height: 1.2;
           }
           
           table {
@@ -85,18 +91,29 @@ export const useCertificateExporter = () => {
           }
           
           table.header {
-            margin-bottom: 20pt;
+            margin-bottom: 10pt;
           }
           
           table.content {
             border: 1px solid black;
-            margin-top: 10pt;
-            margin-bottom: 20pt;
+            margin-top: 8pt;
+            margin-bottom: 10pt;
           }
           
           table.content td, table.content th {
             border: 1px solid black;
-            padding: 5pt;
+            padding: 3pt;
+            line-height: 1.2;
+          }
+          
+          .total-row td {
+            padding-top: 2pt;
+            padding-bottom: 2pt;
+          }
+          
+          .summary {
+            margin-top: 6pt;
+            margin-bottom: 6pt;
           }
           
           .center {
@@ -113,32 +130,52 @@ export const useCertificateExporter = () => {
           
           .title {
             text-align: center;
-            margin: 20pt 0;
+            margin: 10pt 0;
+            margin-bottom: 15pt;
           }
           
           .title h1 {
             font-size: 16pt;
-            margin: 5pt 0;
+            margin: 4pt 0;
           }
           
           .title h2 {
             font-size: 14pt;
-            margin: 5pt 0;
+            margin: 2pt 0;
           }
           
           .signature {
-            margin-top: 20pt;
+            margin-top: 15pt;
             text-align: right;
           }
           
           .signature-space {
-            height: 72pt;
+            height: 60pt;
+          }
+          
+          .person-info {
+            margin-bottom: 10pt;
+          }
+          
+          .person-info p {
+            margin-top: 4pt;
+            margin-bottom: 4pt;
+            line-height: 1.3;
+          }
+          
+          .font-bold {
+            font-weight: bold;
           }
           
           .header-left {
             width: 50%;
-            text-align: center;
+            text-align: left;
             vertical-align: top;
+          }
+          
+          .header-left p {
+            margin-left: 0;
+            margin-bottom: 3pt;
           }
           
           .header-right {
@@ -192,7 +229,7 @@ export const useCertificateExporter = () => {
           <table class="header">
             <tr>
               <td class="header-left">
-                <p class="bold">SỞ Y TẾ THÀNH PHỐ HỒ CHÍ MINH</p>
+                <p class="bold">SỞ Y TẾ TP. HỒ CHÍ MINH</p>
                 <p class="bold">BỆNH VIỆN QUẬN TÂN PHÚ</p>
                 <p>Số:........./BVQTP - GCNĐTLT</p>
               </td>
@@ -212,23 +249,12 @@ export const useCertificateExporter = () => {
           </div>
 
           <!-- Person Info -->
-          <table class="info">
-            <tr>
-              <td class="info-label">Chứng nhận:</td>
-              <td>Ông/Bà: ${employee.fullName || '(Chưa có)'}</td>
-            </tr>
-            <tr>
-              <td class="info-label">Sinh ngày:</td>
-              <td>${employee.birthDate || '(Chưa có)'}</td>
-            </tr>
-            <tr>
-              <td class="info-label">Đơn vị công tác:</td>
-              <td>${employee.department || 'KHTH'}</td>
-            </tr>
-            <tr>
-              <td colspan="2" class="bold">Đã hoàn thành cập nhật kiến thức y khoa liên tục với các nội dung sau:</td>
-            </tr>
-          </table>
+          <div class="person-info">
+            <p><span class="font-bold">Chứng nhận:</span> Ông/Bà: ${employee.fullName || '(Chưa có)'}</p>
+            <p><span class="font-bold">Sinh ngày:</span> ${employee.birthDate || '(Chưa có)'}</p>
+            <p><span class="font-bold">Đơn vị công tác:</span> Bệnh viện quận Tân Phú</p>
+            <p><span class="font-bold">Đã hoàn thành cập nhật kiến thức y khoa liên tục với các nội dung như sau:</span></p>
+          </div>
 
           <!-- Table -->
           <table class="content">
@@ -279,17 +305,17 @@ export const useCertificateExporter = () => {
           `từ ngày ...... đến ngày ......`));
 
     html += `
-            <tr>
+            <tr class="total-row">
               <td class="bold" colspan="5">Tổng cộng</td>
               <td class="center bold">${totalHours}</td>
             </tr>
           </table>
 
-          <p>Tổng số tiết đào tạo liên tục ${dateRangeText}: <b>${totalHours}</b> (tổng) giờ tín chỉ</p>
+          <p class="summary">Tổng số tiết đào tạo liên tục ${dateRangeText}: <b>${totalHours}</b> (tổng) giờ tín chỉ</p>
 
           <div class="signature">
-            <p>TP. Hồ Chí Minh, ${formattedDate}</p>
-            <p class="bold" style="margin-right: 100px;">GIÁM ĐỐC</p>
+            <p style="font-style: italic; margin-bottom: 3pt;">TP. Hồ Chí Minh, ${formattedDate}</p>
+            <p class="bold" style="margin-right: 100px; margin-top: 3pt; margin-bottom: 3pt;">GIÁM ĐỐC</p>
             <div class="signature-space"></div>
           </div>
         </div>

@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { FaPlus, FaUpload, FaTrash, FaSave, FaTimes, FaSearch } from 'react-icons/fa';
+import { FaPlus, FaUpload, FaTrash, FaSave, FaTimes, FaSearch, FaEdit } from 'react-icons/fa';
 import { useToast } from '@/components/ui/use-toast';
 import * as XLSX from 'xlsx';
 import Papa from 'papaparse';
@@ -342,6 +342,12 @@ export default function EmployeesPage() {
     }
   };
 
+  const handleEditEmployee = (employee: Employee) => {
+    setCurrentEmployee(employee);
+    setIsEditing(true);
+    setIsDialogOpen(true);
+  };
+
   const renderCell = (employee: Employee, field: keyof Employee | string) => {
     // Special case for training records column
     if (field === 'Lịch sử đào tạo') {
@@ -503,8 +509,8 @@ export default function EmployeesPage() {
                         </div>
                       </TableHead>
                     ))}
-                    <TableHead className="w-20">
-                      <span className="mx-1">Xoá</span>
+                    <TableHead className="w-28">
+                      <span className="mx-1">Actions</span>
                     </TableHead>
                   </TableRow>
                 </TableHeader>
@@ -525,12 +531,21 @@ export default function EmployeesPage() {
                           )}
                         </TableCell>
                       ))}
-                      <TableCell className="w-20 p-0">
-                        <div className="flex justify-center m-1">
+                      <TableCell className="w-28 p-0">
+                        <div className="flex justify-center m-1 gap-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handleEditEmployee(employee)}
+                            title="Edit employee"
+                          >
+                            <FaEdit className="h-4 w-4" />
+                          </Button>
                           <Button
                             variant="outline"
                             size="sm"
                             onClick={() => handleDeleteEmployee(employee.id)}
+                            title="Delete employee"
                           >
                             <FaTrash className="h-4 w-4" />
                           </Button>
@@ -548,7 +563,7 @@ export default function EmployeesPage() {
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className="max-w-3xl">
           <DialogHeader>
-            <DialogTitle>{isEditing ? 'Chỉnh sửa nhân viên' : 'Thêm nhân viên'}</DialogTitle>
+            <DialogTitle>{isEditing ? 'Edit Employee Information' : 'Add New Employee'}</DialogTitle>
           </DialogHeader>
           <form onSubmit={handleSubmit}>
             <div className="grid grid-cols-2 gap-4 py-4">
@@ -642,12 +657,12 @@ export default function EmployeesPage() {
                 />
               </div>
             </div>
-            <div className="flex justify-end gap-2">
+            <div className="flex justify-end gap-2 mt-4">
               <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
                 Cancel
               </Button>
-              <Button type="submit">
-                {isEditing ? 'Update' : 'Create'}
+              <Button type="submit" variant="default">
+                {isEditing ? 'Save Changes' : 'Create Employee'}
               </Button>
             </div>
           </form>
