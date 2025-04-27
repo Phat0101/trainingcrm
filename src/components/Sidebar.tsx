@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { FaUserAlt, FaGraduationCap, FaCertificate, FaListAlt, FaSignOutAlt, FaUser } from 'react-icons/fa';
+import { FaUserAlt, FaGraduationCap, FaCertificate, FaListAlt, FaSignOutAlt, FaUser, FaDatabase } from 'react-icons/fa';
 import { cn } from '@/lib/utils';
 import { useSession, signOut } from 'next-auth/react';
 import { Button } from './ui/button';
@@ -25,6 +25,11 @@ const navItems = [
     name: 'Báo cáo',
     href: '/reports',
     icon: FaListAlt,
+  },
+  {
+    name: 'Lưu trữ',
+    href: '/backup',
+    icon: FaDatabase,
   },
 ];
 

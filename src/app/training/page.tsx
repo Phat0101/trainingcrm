@@ -328,7 +328,7 @@ export default function TrainingPage() {
           className="cursor-pointer hover:bg-gray-100 p-1 rounded"
           onClick={() => handleCellClick(record, field)}
         >
-          {record.totalHour !== null ? `${record.totalHour} hour(s)` : ''}
+          {record.totalHour !== null ? `${record.totalHour} giờ` : ''}
         </div>
       );
     }
@@ -372,7 +372,7 @@ export default function TrainingPage() {
                     <TableHead className="w-[150px] min-w-[100px] p-2">Hình thức</TableHead>
                     <TableHead className="w-[200px] min-w-[120px] p-2">Nội dung</TableHead>
                     <TableHead className="w-[150px] min-w-[100px] p-2">Đơn vị/cá nhân chịu trách nhiệm</TableHead>
-                    <TableHead className="w-[100px] min-w-[80px] p-2">Tổng giờ tín chỉ</TableHead>
+                    <TableHead className="w-[100px] min-w-[80px] p-2">Tổng thời gian</TableHead>
                     <TableHead className="w-[150px] min-w-[120px] p-2">Mô tả thời gian</TableHead>
                     <TableHead className="w-[120px] min-w-[100px] p-2">Ngày bắt đầu</TableHead>
                     <TableHead className="w-[120px] min-w-[100px] p-2">Ngày kết thúc</TableHead>

@@ -1,5 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
-
 import { useState, useEffect } from 'react';
 import DashboardLayout from '@/components/DashboardLayout';
 import { Button } from '@/components/ui/button';
@@ -418,7 +418,7 @@ export default function EmployeesPage() {
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Nhân viên</h1>
         <div className="flex gap-2">
-          <Dialog open={isImportDialogOpen} onOpenChange={setIsImportDialogOpen}>
+          {/* <Dialog open={isImportDialogOpen} onOpenChange={setIsImportDialogOpen}>
             <DialogTrigger asChild>
               <Button variant="outline">
                 <FaUpload className="mr-2 h-4 w-4" />
@@ -441,7 +441,7 @@ export default function EmployeesPage() {
                 </div>
               </div>
             </DialogContent>
-          </Dialog>
+          </Dialog> */}
           
           <Button onClick={handleAddEmployee}>
             <FaPlus className="mr-2 h-4 w-4" />
