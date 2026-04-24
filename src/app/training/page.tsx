@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import DashboardLayout from '@/components/DashboardLayout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -8,7 +8,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { FaPlus, FaEdit, FaTrash, FaSave, FaTimes, FaUsers, FaSearch } from 'react-icons/fa';
+import { FaPlus, FaUsers, FaSearch } from 'react-icons/fa';
+import { Check, X, Pencil, Trash2 } from 'lucide-react';
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { useToast } from '@/components/ui/use-toast';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
@@ -53,7 +55,17 @@ export default function TrainingPage() {
   const [selectedEmployees, setSelectedEmployees] = useState<string[]>([]);
   const [employeeSearchTerm, setEmployeeSearchTerm] = useState('');
   const [filteredEmployees, setFilteredEmployees] = useState<Employee[]>([]);
+  const [recordSearchTerm, setRecordSearchTerm] = useState('');
   const { toast } = useToast();
+
+  const filteredRecords = useMemo(() => {
+    const query = recordSearchTerm.trim().toLowerCase();
+    if (!query) return trainingRecords;
+    return trainingRecords.filter((r) =>
+      [r.trainingType, r.content, r.organizer]
+        .some((field) => field?.toLowerCase().includes(query))
+    );
+  }, [recordSearchTerm, trainingRecords]);
 
   useEffect(() => {
     fetchTrainingRecords();
@@ -84,8 +96,8 @@ export default function TrainingPage() {
     } catch (error) {
       console.error('Error fetching training records:', error);
       toast({
-        title: 'Error',
-        description: 'Failed to fetch training records',
+        title: 'Lỗi',
+        description: 'Không thể tải lịch sử đào tạo',
         variant: 'destructive',
       });
     } finally {
@@ -125,7 +137,7 @@ export default function TrainingPage() {
   };
 
   const handleDeleteTraining = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this training record?')) {
+    if (!confirm('Bạn có chắc muốn xoá lịch sử đào tạo này?')) {
       return;
     }
 
@@ -139,16 +151,16 @@ export default function TrainingPage() {
       }
 
       toast({
-        title: 'Success',
-        description: 'Training record deleted successfully',
+        title: 'Thành công',
+        description: 'Đã xoá lịch sử đào tạo',
       });
 
       fetchTrainingRecords();
     } catch (error) {
       console.error('Error deleting training record:', error);
       toast({
-        title: 'Error',
-        description: 'Failed to delete training record',
+        title: 'Lỗi',
+        description: 'Không thể xoá lịch sử đào tạo',
         variant: 'destructive',
       });
     }
@@ -195,8 +207,8 @@ export default function TrainingPage() {
       }
 
       toast({
-        title: 'Success',
-        description: `Training record ${isEditing ? 'updated' : 'created'} successfully`,
+        title: 'Thành công',
+        description: isEditing ? 'Đã cập nhật lịch sử đào tạo' : 'Đã thêm lịch sử đào tạo',
       });
 
       setIsDialogOpen(false);
@@ -204,8 +216,8 @@ export default function TrainingPage() {
     } catch (error) {
       console.error(`Error ${isEditing ? 'updating' : 'creating'} training record:`, error);
       toast({
-        title: 'Error',
-        description: error instanceof Error ? error.message : `Failed to ${isEditing ? 'update' : 'create'} training record`,
+        title: 'Lỗi',
+        description: error instanceof Error ? error.message : (isEditing ? 'Không thể cập nhật lịch sử đào tạo' : 'Không thể thêm lịch sử đào tạo'),
         variant: 'destructive',
       });
     }
@@ -214,7 +226,14 @@ export default function TrainingPage() {
   const handleCellClick = (record: TrainingRecord, field: keyof TrainingRecord) => {
     if (field === 'id' || field === 'trainingIndex' || field === 'employees') return;
     setEditingCell({ id: record.id, field });
-    setEditValue(record[field] as string || '');
+    const value = record[field];
+    if (value === null || value === undefined) {
+      setEditValue('');
+    } else if (field === 'startDate' || field === 'endDate') {
+      setEditValue(typeof value === 'string' ? value.slice(0, 10) : '');
+    } else {
+      setEditValue(String(value));
+    }
   };
 
   const handleCellSave = async () => {
@@ -241,8 +260,8 @@ export default function TrainingPage() {
       }
 
       toast({
-        title: 'Success',
-        description: 'Training record updated successfully',
+        title: 'Thành công',
+        description: 'Đã cập nhật lịch sử đào tạo',
       });
 
       // Update local state
@@ -257,8 +276,8 @@ export default function TrainingPage() {
     } catch (error) {
       console.error('Error updating training record:', error);
       toast({
-        title: 'Error',
-        description: 'Failed to update training record',
+        title: 'Lỗi',
+        description: 'Không thể cập nhật lịch sử đào tạo',
         variant: 'destructive',
       });
     }
@@ -288,11 +307,23 @@ export default function TrainingPage() {
               className="h-8 mr-2"
               autoFocus
             />
-            <Button variant="ghost" size="sm" onClick={handleCellSave} className="h-8 w-8 p-0">
-              <FaSave className="h-4 w-4" />
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleCellSave}
+              className="h-8 w-8 p-0 text-green-600 hover:text-green-700 hover:bg-green-50"
+              title="Lưu"
+            >
+              <Check className="h-4 w-4" />
             </Button>
-            <Button variant="ghost" size="sm" onClick={handleCellCancel} className="h-8 w-8 p-0">
-              <FaTimes className="h-4 w-4" />
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleCellCancel}
+              className="h-8 w-8 p-0 text-gray-500 hover:text-gray-700 hover:bg-gray-100"
+              title="Huỷ"
+            >
+              <X className="h-4 w-4" />
             </Button>
           </div>
         );
@@ -314,11 +345,23 @@ export default function TrainingPage() {
                 ))}
               </SelectContent>
             </Select>
-            <Button variant="ghost" size="sm" onClick={handleCellSave} className="h-8 w-8 p-0">
-              <FaSave className="h-4 w-4" />
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleCellSave}
+              className="h-8 w-8 p-0 text-green-600 hover:text-green-700 hover:bg-green-50"
+              title="Lưu"
+            >
+              <Check className="h-4 w-4" />
             </Button>
-            <Button variant="ghost" size="sm" onClick={handleCellCancel} className="h-8 w-8 p-0">
-              <FaTimes className="h-4 w-4" />
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleCellCancel}
+              className="h-8 w-8 p-0 text-gray-500 hover:text-gray-700 hover:bg-gray-100"
+              title="Huỷ"
+            >
+              <X className="h-4 w-4" />
             </Button>
           </div>
         );
@@ -332,11 +375,23 @@ export default function TrainingPage() {
             className="h-8 mr-2"
             autoFocus
           />
-          <Button variant="ghost" size="sm" onClick={handleCellSave} className="h-8 w-8 p-0">
-            <FaSave className="h-4 w-4" />
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={handleCellSave}
+            className="h-8 w-8 p-0 text-green-600 hover:text-green-700 hover:bg-green-50"
+            title="Lưu"
+          >
+            <Check className="h-4 w-4" />
           </Button>
-          <Button variant="ghost" size="sm" onClick={handleCellCancel} className="h-8 w-8 p-0">
-            <FaTimes className="h-4 w-4" />
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={handleCellCancel}
+            className="h-8 w-8 p-0 text-gray-500 hover:text-gray-700 hover:bg-gray-100"
+            title="Huỷ"
+          >
+            <X className="h-4 w-4" />
           </Button>
         </div>
       );
@@ -379,28 +434,54 @@ export default function TrainingPage() {
 
   return (
     <DashboardLayout>
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Lịch sử đào tạo</h1>
-        <Button onClick={handleAddTraining}>
+      <div className="flex items-center gap-3 mb-6">
+        <div className="relative flex-1">
+          <Input
+            placeholder="Tìm theo hình thức, nội dung, đơn vị..."
+            value={recordSearchTerm}
+            onChange={(e) => setRecordSearchTerm(e.target.value)}
+            className="pl-10"
+          />
+          <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+            <FaSearch className="h-4 w-4" />
+          </div>
+          {recordSearchTerm && (
+            <Button
+              variant="ghost"
+              size="sm"
+              className="absolute right-2 top-1/2 transform -translate-y-1/2 h-8 w-8 p-0"
+              onClick={() => setRecordSearchTerm('')}
+              title="Xoá tìm kiếm"
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          )}
+        </div>
+        <Button onClick={handleAddTraining} className="shrink-0">
           <FaPlus className="mr-2 h-4 w-4" />
           Thêm lịch sử đào tạo
         </Button>
       </div>
+      {recordSearchTerm && (
+        <p className="text-sm text-gray-500 -mt-4 mb-4">
+          Tìm thấy {filteredRecords.length} lịch sử đào tạo phù hợp với &quot;{recordSearchTerm}&quot;
+        </p>
+      )}
 
       <Card>
-        <CardContent>
+        <CardContent className="p-0">
           {isLoading ? (
             <div className="flex justify-center items-center h-40">
-              <p>Loading...</p>
+              <p>Đang tải...</p>
             </div>
-          ) : trainingRecords.length === 0 ? (
+          ) : filteredRecords.length === 0 ? (
             <div className="flex justify-center items-center h-40">
-              <p>Không tìm thấy lịch sử đào tạo. Thêm lịch sử đào tạo để bắt đầu.</p>
+              <p>{recordSearchTerm ? 'Không có lịch sử đào tạo phù hợp với tìm kiếm.' : 'Chưa có lịch sử đào tạo. Thêm lịch sử đào tạo để bắt đầu.'}</p>
             </div>
           ) : (
-            <div className="overflow-x-auto">
+            <ScrollArea className="h-[88vh] w-full">
               <Table>
-                <TableHeader>
+                <TableHeader className="sticky top-0 z-10 bg-background shadow-sm">
                   <TableRow>
                     <TableHead className="w-[40px] min-w-[40px] p-2">#</TableHead>
                     <TableHead className="w-[150px] min-w-[100px] p-2">Hình thức</TableHead>
@@ -411,11 +492,11 @@ export default function TrainingPage() {
                     <TableHead className="w-[120px] min-w-[100px] p-2">Ngày bắt đầu</TableHead>
                     <TableHead className="w-[120px] min-w-[100px] p-2">Ngày kết thúc</TableHead>
                     <TableHead className="w-[120px] min-w-[80px] p-2">Nhân viên</TableHead>
-                    <TableHead className="w-[100px] min-w-[80px] p-2">Actions</TableHead>
+                    <TableHead className="w-[100px] min-w-[80px] p-2">Thao tác</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {trainingRecords.map((record) => (
+                  {filteredRecords.map((record) => (
                     <TableRow key={record.id}>
                       <TableCell className="w-[40px] min-w-[40px] p-2">{record.trainingIndex}</TableCell>
                       <TableCell className="w-[150px] min-w-[100px] p-2">{renderCell(record, 'trainingType')}</TableCell>
@@ -424,7 +505,7 @@ export default function TrainingPage() {
                       <TableCell className="w-[100px] min-w-[80px] p-2">{renderCell(record, 'totalHour')}</TableCell>
                       <TableCell className="w-[150px] min-w-[120px] p-2">{renderCell(record, 'timeDescription')}</TableCell>
                       <TableCell className="w-[120px] min-w-[100px] p-2">
-                        {record.startDate && editingCell?.id === record.id && editingCell.field === 'startDate' ? (
+                        {editingCell?.id === record.id && editingCell.field === 'startDate' ? (
                           <div className="flex items-center space-x-2">
                             <Input
                               type="date"
@@ -432,11 +513,23 @@ export default function TrainingPage() {
                               onChange={(e) => setEditValue(e.target.value)}
                               className="w-full"
                             />
-                            <Button size="sm" variant="ghost" onClick={handleCellSave}>
-                              <FaSave className="h-4 w-4" />
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={handleCellSave}
+                              className="h-8 w-8 p-0 text-green-600 hover:text-green-700 hover:bg-green-50"
+                              title="Lưu"
+                            >
+                              <Check className="h-4 w-4" />
                             </Button>
-                            <Button size="sm" variant="ghost" onClick={handleCellCancel}>
-                              <FaTimes className="h-4 w-4" />
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={handleCellCancel}
+                              className="h-8 w-8 p-0 text-gray-500 hover:text-gray-700 hover:bg-gray-100"
+                              title="Huỷ"
+                            >
+                              <X className="h-4 w-4" />
                             </Button>
                           </div>
                         ) : (
@@ -449,7 +542,7 @@ export default function TrainingPage() {
                         )}
                       </TableCell>
                       <TableCell className="w-[120px] min-w-[100px] p-2">
-                        {record.endDate && editingCell?.id === record.id && editingCell.field === 'endDate' ? (
+                        {editingCell?.id === record.id && editingCell.field === 'endDate' ? (
                           <div className="flex items-center space-x-2">
                             <Input
                               type="date"
@@ -457,11 +550,23 @@ export default function TrainingPage() {
                               onChange={(e) => setEditValue(e.target.value)}
                               className="w-full"
                             />
-                            <Button size="sm" variant="ghost" onClick={handleCellSave}>
-                              <FaSave className="h-4 w-4" />
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={handleCellSave}
+                              className="h-8 w-8 p-0 text-green-600 hover:text-green-700 hover:bg-green-50"
+                              title="Lưu"
+                            >
+                              <Check className="h-4 w-4" />
                             </Button>
-                            <Button size="sm" variant="ghost" onClick={handleCellCancel}>
-                              <FaTimes className="h-4 w-4" />
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={handleCellCancel}
+                              className="h-8 w-8 p-0 text-gray-500 hover:text-gray-700 hover:bg-gray-100"
+                              title="Huỷ"
+                            >
+                              <X className="h-4 w-4" />
                             </Button>
                           </div>
                         ) : (
@@ -475,20 +580,24 @@ export default function TrainingPage() {
                       </TableCell>
                       <TableCell className="w-[120px] min-w-[80px] p-2">{renderCell(record, 'employees' as keyof TrainingRecord)}</TableCell>
                       <TableCell className="w-[100px] min-w-[80px] p-2">
-                        <div className="flex gap-2">
+                        <div className="flex gap-1">
                           <Button
-                            variant="outline"
+                            variant="ghost"
                             size="sm"
                             onClick={() => handleEditTraining(record)}
+                            title="Chỉnh sửa"
+                            className="h-8 w-8 p-0 text-gray-500 hover:text-gray-900 hover:bg-gray-100"
                           >
-                            <FaEdit className="h-4 w-4" />
+                            <Pencil className="h-4 w-4" />
                           </Button>
                           <Button
-                            variant="outline"
+                            variant="ghost"
                             size="sm"
                             onClick={() => handleDeleteTraining(record.id)}
+                            title="Xoá"
+                            className="h-8 w-8 p-0 text-gray-500 hover:text-red-600 hover:bg-red-50"
                           >
-                            <FaTrash className="h-4 w-4" />
+                            <Trash2 className="h-4 w-4" />
                           </Button>
                         </div>
                       </TableCell>
@@ -496,7 +605,8 @@ export default function TrainingPage() {
                   ))}
                 </TableBody>
               </Table>
-            </div>
+              <ScrollBar orientation="horizontal" />
+            </ScrollArea>
           )}
         </CardContent>
       </Card>
@@ -599,8 +709,9 @@ export default function TrainingPage() {
                         size="sm"
                         className="absolute right-2 top-1/2 transform -translate-y-1/2 h-8 w-8 p-0"
                         onClick={() => setEmployeeSearchTerm('')}
+                        title="Xoá tìm kiếm"
                       >
-                        <FaTimes className="h-4 w-4" />
+                        <X className="h-4 w-4" />
                       </Button>
                     )}
                   </div>

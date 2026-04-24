@@ -8,7 +8,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { FaPlus, FaUpload, FaTrash, FaSave, FaTimes, FaSearch, FaEdit } from 'react-icons/fa';
+import { FaPlus, FaSearch } from 'react-icons/fa';
+import { Check, X, ChevronsLeft, ChevronsRight, Pencil, Trash2 } from 'lucide-react';
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { useToast } from '@/components/ui/use-toast';
 import * as XLSX from 'xlsx';
 import Papa from 'papaparse';
@@ -107,8 +109,8 @@ export default function EmployeesPage() {
     } catch (error) {
       console.error('Error fetching employees:', error);
       toast({
-        title: 'Error',
-        description: 'Failed to fetch employees',
+        title: 'Lỗi',
+        description: 'Không thể tải danh sách nhân viên',
         variant: 'destructive',
       });
     } finally {
@@ -123,7 +125,7 @@ export default function EmployeesPage() {
   };
 
   const handleDeleteEmployee = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this employee?')) {
+    if (!confirm('Bạn có chắc muốn xoá nhân viên này?')) {
       return;
     }
 
@@ -137,16 +139,16 @@ export default function EmployeesPage() {
       }
 
       toast({
-        title: 'Success',
-        description: 'Employee deleted successfully',
+        title: 'Thành công',
+        description: 'Đã xoá nhân viên',
       });
 
       fetchEmployees();
     } catch (error) {
       console.error('Error deleting employee:', error);
       toast({
-        title: 'Error',
-        description: 'Failed to delete employee',
+        title: 'Lỗi',
+        description: 'Không thể xoá nhân viên',
         variant: 'destructive',
       });
     }
@@ -185,8 +187,8 @@ export default function EmployeesPage() {
       }
 
       toast({
-        title: 'Success',
-        description: `Employee ${isEditing ? 'updated' : 'created'} successfully`,
+        title: 'Thành công',
+        description: isEditing ? 'Đã cập nhật nhân viên' : 'Đã thêm nhân viên',
       });
 
       setIsDialogOpen(false);
@@ -194,8 +196,8 @@ export default function EmployeesPage() {
     } catch (error) {
       console.error(`Error ${isEditing ? 'updating' : 'creating'} employee:`, error);
       toast({
-        title: 'Error',
-        description: `Failed to ${isEditing ? 'update' : 'create'} employee`,
+        title: 'Lỗi',
+        description: isEditing ? 'Không thể cập nhật nhân viên' : 'Không thể thêm nhân viên',
         variant: 'destructive',
       });
     }
@@ -383,11 +385,23 @@ export default function EmployeesPage() {
             className="h-8 mr-2"
             autoFocus
           />
-          <Button variant="ghost" size="sm" onClick={handleCellSave} className="h-8 w-8 p-0">
-            <FaSave className="h-4 w-4" />
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={handleCellSave}
+            className="h-8 w-8 p-0 text-green-600 hover:text-green-700 hover:bg-green-50"
+            title="Lưu"
+          >
+            <Check className="h-4 w-4" />
           </Button>
-          <Button variant="ghost" size="sm" onClick={handleCellCancel} className="h-8 w-8 p-0">
-            <FaTimes className="h-4 w-4" />
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={handleCellCancel}
+            className="h-8 w-8 p-0 text-gray-500 hover:text-gray-700 hover:bg-gray-100"
+            title="Huỷ"
+          >
+            <X className="h-4 w-4" />
           </Button>
         </div>
       );
@@ -402,10 +416,10 @@ export default function EmployeesPage() {
       <div 
         className={`cursor-pointer hover:bg-gray-100 m-1 rounded truncate min-h-[28px] ${isEmpty ? 'border border-dashed border-gray-200' : ''}`}
         onClick={() => handleCellClick(employee, employeeField)}
-        title={isEmpty ? 'Click to add data' : (displayValue || '')}
+        title={isEmpty ? 'Nhấn để thêm dữ liệu' : (displayValue || '')}
       >
         {isEmpty ? (
-          <span className="text-gray-400 text-xs italic px-1">Click to edit</span>
+          <span className="text-gray-400 text-xs italic px-1">Nhấn để chỉnh sửa</span>
         ) : (
           displayValue
         )}
@@ -415,43 +429,8 @@ export default function EmployeesPage() {
 
   return (
     <DashboardLayout>
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Nhân viên</h1>
-        <div className="flex gap-2">
-          {/* <Dialog open={isImportDialogOpen} onOpenChange={setIsImportDialogOpen}>
-            <DialogTrigger asChild>
-              <Button variant="outline">
-                <FaUpload className="mr-2 h-4 w-4" />
-                File dữ liệu (CSV/Excel)
-              </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Import Employees</DialogTitle>
-              </DialogHeader>
-              <div className="grid gap-4 py-4">
-                <div className="grid gap-2">
-                  <Label htmlFor="file">Upload CSV or Excel file</Label>
-                  <Input
-                    id="file"
-                    type="file"
-                    accept=".csv,.xlsx,.xls"
-                    onChange={handleFileUpload}
-                  />
-                </div>
-              </div>
-            </DialogContent>
-          </Dialog> */}
-          
-          <Button onClick={handleAddEmployee}>
-            <FaPlus className="mr-2 h-4 w-4" />
-            Thêm nhân viên
-          </Button>
-        </div>
-      </div>
-
-      <div className="mb-6">
-        <div className="relative">
+      <div className="flex items-center gap-3 mb-6">
+        <div className="relative flex-1">
           <Input
             placeholder="Tìm kiếm nhân viên theo tên..."
             value={searchTerm}
@@ -467,50 +446,62 @@ export default function EmployeesPage() {
               size="sm"
               className="absolute right-2 top-1/2 transform -translate-y-1/2 h-8 w-8 p-0"
               onClick={() => setSearchTerm('')}
+              title="Xoá tìm kiếm"
             >
-              <FaTimes className="h-4 w-4" />
+              <X className="h-4 w-4" />
             </Button>
           )}
         </div>
-        {searchTerm && (
-          <p className="text-sm text-gray-500 mt-2">
-            Found {filteredEmployees.length} {filteredEmployees.length === 1 ? 'employee' : 'employees'} matching &quot;{searchTerm}&quot;
-          </p>
-        )}
+        <Button onClick={handleAddEmployee} className="shrink-0">
+          <FaPlus className="mr-2 h-4 w-4" />
+          Thêm nhân viên
+        </Button>
       </div>
+      {searchTerm && (
+        <p className="text-sm text-gray-500 -mt-4 mb-4">
+          Tìm thấy {filteredEmployees.length} nhân viên phù hợp với &quot;{searchTerm}&quot;
+        </p>
+      )}
 
       <Card>
-        <CardContent>
+        <CardContent className="p-0">
           {isLoading ? (
             <div className="flex justify-center items-center h-40">
-              <p>Loading...</p>
+              <p>Đang tải...</p>
             </div>
           ) : filteredEmployees.length === 0 ? (
             <div className="flex justify-center items-center h-40">
-              <p>{searchTerm ? 'No employees found matching your search.' : 'No employees found. Add some employees to get started.'}</p>
+              <p>{searchTerm ? 'Không tìm thấy nhân viên phù hợp với tìm kiếm.' : 'Chưa có nhân viên. Thêm nhân viên để bắt đầu.'}</p>
             </div>
           ) : (
-            <div className="overflow-x-auto h-[77vh]">
+            <ScrollArea className="h-[88vh] w-full">
               <Table className="table-fixed">
-                <TableHeader>
+                <TableHeader className="sticky top-0 z-10 bg-background shadow-sm">
                   <TableRow>
-                    {COLUMNS.map((column) => (
-                      <TableHead 
-                        key={column.key} 
-                        className={`${collapsedColumns[column.key] ? column.minWidth : column.width} cursor-pointer transition-all duration-200 p-0 h-16`}
-                        onClick={() => toggleColumnCollapse(column.key)}
-                      >
-                        <div className="flex items-center justify-start">
-                          {collapsedColumns[column.key] ? (
-                            <span className="text-gray-400 mr-1">{column.key.slice(0, 4)}...</span>
-                          ) : (
-                            <span className="mr-1">{column.key}</span>
-                          )}
-                        </div>
-                      </TableHead>
-                    ))}
+                    {COLUMNS.map((column) => {
+                      const isCollapsed = collapsedColumns[column.key];
+                      return (
+                        <TableHead
+                          key={column.key}
+                          className={`${isCollapsed ? column.minWidth : column.width} cursor-pointer transition-all duration-200 p-0 h-16 hover:bg-gray-50 group`}
+                          onClick={() => toggleColumnCollapse(column.key)}
+                          title={isCollapsed ? `Mở rộng: ${column.key}` : `Thu gọn: ${column.key}`}
+                        >
+                          <div className="flex items-center justify-between px-2 gap-1">
+                            <span className={isCollapsed ? 'text-gray-400 text-xs' : ''}>
+                              {isCollapsed ? `${column.key.slice(0, 4)}...` : column.key}
+                            </span>
+                            {isCollapsed ? (
+                              <ChevronsRight className="h-3.5 w-3.5 text-gray-400 group-hover:text-gray-700 shrink-0" />
+                            ) : (
+                              <ChevronsLeft className="h-3.5 w-3.5 text-gray-300 group-hover:text-gray-700 shrink-0" />
+                            )}
+                          </div>
+                        </TableHead>
+                      );
+                    })}
                     <TableHead className="w-28">
-                      <span className="mx-1">Actions</span>
+                      <span className="mx-1">Thao tác</span>
                     </TableHead>
                   </TableRow>
                 </TableHeader>
@@ -532,22 +523,24 @@ export default function EmployeesPage() {
                         </TableCell>
                       ))}
                       <TableCell className="w-28 p-0">
-                        <div className="flex justify-center m-1 gap-2">
+                        <div className="flex justify-center m-1 gap-1">
                           <Button
-                            variant="outline"
+                            variant="ghost"
                             size="sm"
                             onClick={() => handleEditEmployee(employee)}
-                            title="Edit employee"
+                            title="Chỉnh sửa nhân viên"
+                            className="h-8 w-8 p-0 text-gray-500 hover:text-gray-900 hover:bg-gray-100"
                           >
-                            <FaEdit className="h-4 w-4" />
+                            <Pencil className="h-4 w-4" />
                           </Button>
                           <Button
-                            variant="outline"
+                            variant="ghost"
                             size="sm"
                             onClick={() => handleDeleteEmployee(employee.id)}
-                            title="Delete employee"
+                            title="Xoá nhân viên"
+                            className="h-8 w-8 p-0 text-gray-500 hover:text-red-600 hover:bg-red-50"
                           >
-                            <FaTrash className="h-4 w-4" />
+                            <Trash2 className="h-4 w-4" />
                           </Button>
                         </div>
                       </TableCell>
@@ -555,7 +548,8 @@ export default function EmployeesPage() {
                   ))}
                 </TableBody>
               </Table>
-            </div>
+              <ScrollBar orientation="horizontal" />
+            </ScrollArea>
           )}
         </CardContent>
       </Card>
@@ -563,7 +557,7 @@ export default function EmployeesPage() {
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className="max-w-3xl">
           <DialogHeader>
-            <DialogTitle>{isEditing ? 'Edit Employee Information' : 'Add New Employee'}</DialogTitle>
+            <DialogTitle>{isEditing ? 'Chỉnh sửa nhân viên' : 'Thêm nhân viên'}</DialogTitle>
           </DialogHeader>
           <form onSubmit={handleSubmit}>
             <div className="grid grid-cols-2 gap-4 py-4">
@@ -659,10 +653,10 @@ export default function EmployeesPage() {
             </div>
             <div className="flex justify-end gap-2 mt-4">
               <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
-                Cancel
+                Huỷ
               </Button>
               <Button type="submit" variant="default">
-                {isEditing ? 'Save Changes' : 'Create Employee'}
+                {isEditing ? 'Lưu thay đổi' : 'Tạo nhân viên'}
               </Button>
             </div>
           </form>
