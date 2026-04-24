@@ -5,7 +5,7 @@ import { getToken } from 'next-auth/jwt';
 // List of public routes that don't require authentication
 const publicRoutes = ['/auth/login'];
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   
   // Check if the path is a public route

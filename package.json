@@ -3,11 +3,11 @@
 	"version": "1.0.1",
 	"private": true,
 	"scripts": {
-		"dev": "next dev --turbopack",
-		"build": "npx prisma generate && next build",
-		"start": "next start",
-		"lint": "next lint",
-		"create-admin": "npx ts-node scripts/create-admin.ts"
+		"dev": "bun run --bun next dev",
+		"build": "prisma generate && bun run --bun next build",
+		"start": "bun run --bun next start",
+		"lint": "eslint .",
+		"create-admin": "bun run scripts/create-admin.ts"
 	},
 	"dependencies": {
 		"@auth/prisma-adapter": "^2.8.0",
@@ -32,34 +32,32 @@
 		"clsx": "^2.1.1",
 		"date-fns": "^4.1.0",
 		"lucide-react": "^0.474.0",
-		"next": "15.2.0",
+		"next": "^16.2.4",
 		"next-auth": "^4.24.11",
 		"papaparse": "^5.5.2",
 		"prisma": "^6.6.0",
-		"react": "19.0.0",
-		"react-dom": "19.0.0",
+		"react": "^19.2.5",
+		"react-dom": "^19.2.5",
 		"react-hook-form": "^7.54.2",
 		"react-icons": "^5.5.0",
 		"react-pdf": "^9.2.1",
 		"tailwind-merge": "^2.6.0",
 		"tailwindcss-animate": "^1.0.7",
 		"xlsx": "^0.18.5",
-		"zod": "^3.24.2"
+		"zod": "^4.3.6"
 	},
 	"devDependencies": {
-		"@eslint/eslintrc": "^3",
 		"@types/node": "^20",
-		"@types/react": "19.0.10",
-		"@types/react-dom": "19.0.4",
+		"@types/react": "^19.2.0",
+		"@types/react-dom": "^19.2.0",
 		"eslint": "^9",
-		"eslint-config-next": "15.2.0",
+		"eslint-config-next": "^16.2.4",
 		"postcss": "^8.5.1",
 		"tailwindcss": "^3.4.17",
-		"ts-node": "^10.9.2",
 		"typescript": "^5"
 	},
 	"overrides": {
-		"@types/react": "19.0.10",
-		"@types/react-dom": "19.0.4"
+		"@types/react": "^19.2.0",
+		"@types/react-dom": "^19.2.0"
 	}
 }
