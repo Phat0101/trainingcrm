@@ -11,6 +11,14 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { FaPlus, FaEdit, FaTrash, FaSave, FaTimes, FaUsers, FaSearch } from 'react-icons/fa';
 import { useToast } from '@/components/ui/use-toast';
 import { Checkbox } from '@/components/ui/checkbox';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { TRAINING_TYPES } from '@/lib/training-types';
 
 type TrainingRecord = {
   id: string;
@@ -289,7 +297,33 @@ export default function TrainingPage() {
           </div>
         );
       }
-      
+
+      // For trainingType field, use a Select with the fixed options
+      if (field === 'trainingType') {
+        return (
+          <div className="flex items-center">
+            <Select value={editValue} onValueChange={setEditValue}>
+              <SelectTrigger className="h-8 mr-2">
+                <SelectValue placeholder="Chọn hình thức" />
+              </SelectTrigger>
+              <SelectContent>
+                {TRAINING_TYPES.map((type) => (
+                  <SelectItem key={type} value={type}>
+                    {type}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Button variant="ghost" size="sm" onClick={handleCellSave} className="h-8 w-8 p-0">
+              <FaSave className="h-4 w-4" />
+            </Button>
+            <Button variant="ghost" size="sm" onClick={handleCellCancel} className="h-8 w-8 p-0">
+              <FaTimes className="h-4 w-4" />
+            </Button>
+          </div>
+        );
+      }
+
       return (
         <div className="flex items-center">
           <Input
@@ -476,11 +510,21 @@ export default function TrainingPage() {
             <div className="grid grid-cols-2 gap-4 py-4">
               <div className="grid gap-2">
                 <Label htmlFor="trainingType">Hình thức</Label>
-                <Input
-                  id="trainingType"
+                <Select
                   name="trainingType"
-                  defaultValue={currentRecord?.trainingType || ''}
-                />
+                  defaultValue={currentRecord?.trainingType || undefined}
+                >
+                  <SelectTrigger id="trainingType">
+                    <SelectValue placeholder="Chọn hình thức" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {TRAINING_TYPES.map((type) => (
+                      <SelectItem key={type} value={type}>
+                        {type}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="content">Nội dung</Label>
